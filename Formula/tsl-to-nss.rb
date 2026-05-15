@@ -13,7 +13,7 @@ class TslToNss < Formula
   end
 
   test do
-    output = shell_output("#{bin}/tsl-to-nss 2>&1", 1)
-    assert_match "Usage:", output
+    assert_match "Usage:", shell_output("#{bin}/tsl-to-nss 2>&1", 1)
+    assert_match "Usage:", shell_output("#{bin}/tsl-to-nss -h 2>&1", 0)
   end
 end
