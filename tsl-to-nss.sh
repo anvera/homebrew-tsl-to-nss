@@ -49,13 +49,17 @@ else
     echo "Using existing NSS database at $DB_DIR."
 fi
 
+cert_index=1
+
 echo "Extracting root certificates ..."
 tsl-extract "$tsl_file" --root -f der -o "$root_dir" 2>&1 || true
 
 if [[ -d "$root_dir" ]]; then
     for der_file in "$root_dir"/*.der; do
         [[ -e "$der_file" ]] || break
-        nickname=$(basename "${der_file%.der}")
+        base=$(basename "${der_file%.der}"); name_part="${base#????_}"
+        nickname=$(printf "%04d_%s" "$cert_index" "$name_part")
+        cert_index=$((cert_index + 1))
         echo "  [root] $nickname"
         certutil -A -d "$DB_DIR" -n "$nickname" -t "CT,CT,CT" -i "$der_file" \
             || echo "  Warning: could not add '$nickname' (skipping)" >&2
@@ -68,7 +72,9 @@ tsl-extract "$tsl_file" --not-root -f der -o "$non_root_dir" 2>&1 || true
 if [[ -d "$non_root_dir" ]]; then
     for der_file in "$non_root_dir"/*.der; do
         [[ -e "$der_file" ]] || break
-        nickname=$(basename "${der_file%.der}")
+        base=$(basename "${der_file%.der}"); name_part="${base#????_}"
+        nickname=$(printf "%04d_%s" "$cert_index" "$name_part")
+        cert_index=$((cert_index + 1))
         echo "  [non-root] $nickname"
         certutil -A -d "$DB_DIR" -n "$nickname" -t ",," -i "$der_file" \
             || echo "  Warning: could not add '$nickname' (skipping)" >&2
