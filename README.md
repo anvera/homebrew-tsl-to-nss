@@ -27,16 +27,16 @@ tsl-to-nss [-h] <tsl-source> <nss-db-dir>
 
 ### Examples
 
-Import the Chilean TSL into a new database:
+Import a TSL from a URL into a new database:
 
 ```sh
-tsl-to-nss https://example.cl/CL-TSL.xml ~/.nss-cl
+tsl-to-nss https://example.com/tsl.xml ~/.nss-db
 ```
 
 Import from a locally downloaded file:
 
 ```sh
-tsl-to-nss ~/Downloads/CL-TSL-VI6.xml ~/.nss-cl
+tsl-to-nss ~/Downloads/tsl.xml ~/.nss-db
 ```
 
 ## Dependencies
